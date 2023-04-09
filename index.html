@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" href="./css/normalize.css">
+<!-- <link rel="stylesheet" href="./css/normalize.css"> -->
 
-<link rel="stylesheet" href="./css/stylize.css">
+<!-- <link rel="stylesheet" href="./css/stylize.css"> -->
 
 <title>location calculator</title>
 
@@ -38,49 +38,111 @@ createApp({
 			  'WC2A 2LL\n' +
 			  'EC4M 8AD');
       
-      const dests = ref('N1 9AL, "Kings Cross St. Pancras"\n' +
-			'EH1 1BB, "Edinburgh Waverley"\n');
+      const dests = ref('N1 9AL, Kings Cross St. Pancras\n' +
+			'EH1 1BB, Edinburgh Waverley\n');
 
       const status = ref(0);
+
+      
+      // async function fetch_urls(url_array) {
+
+      // 	  Promise.all(url_array.map(url =>
+      // 	      fetch(url)
+      // 		  .then(checkStatus)                 
+      // 		  .then(parseJSON)
+      // 		  .catch(logError)
+      // 	  ))
+      // 	      .then(data => {
+      // 		  // do something with the data
+      // 	      })
+
+	  
+      // 	  const results = await Promise.all(
+      // 	      urls.map((url) => fetch(url).then( (r) => r.json() ))
+      // 	  );
+	  
+      // 	  console.log(JSON.stringify(results, null, 2));
+      // }
 
       function find_distances () {
 
 	  status.value = 1;
 
-	  const origins_array = origins.value.split("\n");
+	  const [origin_objs, dest_objs] = setup_data_structs();
 
-	  const dests_array = dests.value.split("\n");
+	  console.log(origin_objs);
 
-	  const origin_objs = origins_array.map(find_coords);
-
-	  console.log("late" + origin_objs.length + origin_objs);
+	  console.log(dest_objs);
 
       }
 
-      async function find_coords(postcode, index) {
+      function setup_data_structs() {
 
-	  const mapbox_api_key = "pk.eyJ1IjoidGVzdC14emEiLCJhIjoiY2xnOXNiaWRvMWFtcDNlcWxzZjRmZDdldSJ9.lKZ_CDvdIh1Y9dw2DGjbOA";
+	  const origin_array = origins.value.split("\n");
 
-	  const mapbox_json_url =
-		"https://api.mapbox.com/geocoding/v5/mapbox.places/" +
-		postcode + ", United Kingdom.json?access_token=" +
-		mapbox_api_key;
+	  const dest_array = dests.value.split("\n");
 
-	  const res = await fetch(mapbox_json_url);
+	  const origin_objs = origin_array.map(
 
-	  const mapbox_json = await res.json();
+	      postcode => {
+		  
+		  return { "postcode": postcode }
+		  
+	      }
 
-	  const top_hit_coords = mapbox_json.features[0].geometry.coordinates;
+	  );
 
-	  console.log(top_hit_coords);
+	  
+	  const dest_objs = dest_array.map(
 
-	  return {
-	      "postcode": postcode,
-	      "long": top_hit_coords[0],
-	      "lat": top_hit_coords[1]
-	  };
+	      item => {
+
+		  console.log(item);
+
+		  const postcode = item.split(",")[0];
+
+		  const name = item.split(",")[1];
+
+		  return { "postcode": postcode,
+			   "name": name }
+		  
+	      }
+
+	  );
+
+	  return [origin_objs, dest_objs];
 
       }
+
+      function array_of_objs(array) {
+
+	  return array
+      };
+
+      // async function build_mapbox_urls(postcode, index) {
+
+      // 	  const mapbox_api_key = "pk.eyJ1IjoidGVzdC14emEiLCJhIjoiY2xnOXNiaWRvMWFtcDNlcWxzZjRmZDdldSJ9.lKZ_CDvdIh1Y9dw2DGjbOA";
+
+      // 	  const mapbox_json_url =
+      // 		"https://api.mapbox.com/geocoding/v5/mapbox.places/" +
+      // 		postcode + ", United Kingdom.json?access_token=" +
+      // 		mapbox_api_key;
+
+      // 	  const res = await fetch(mapbox_json_url);
+
+      // 	  const mapbox_json = await res.json();
+
+      // 	  const top_hit_coords = mapbox_json.features[0].geometry.coordinates;
+
+      // 	  console.log(top_hit_coords);
+
+      // 	  return {
+      // 	      "postcode": postcode,
+      // 	      "long": top_hit_coords[0],
+      // 	      "lat": top_hit_coords[1]
+      // 	  };
+
+      // }
 
 
     return {
