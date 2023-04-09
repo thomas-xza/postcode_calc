@@ -1,0 +1,24 @@
+
+THE FLOW
+--------
+
+1. user pastes list of postcodes in a textbox, one per line
+
+2. user pastes csv of postcodes with names in textbook
+
+3. hits submit, which triggers a JS function
+
+4. the mapbox API is called (in a parallel i/o way?) to convert postcodes to co-ordinates
+
+- data structure of target venue:
+
+  { postcode: "W1 1AZ",
+    venue: true,
+    name: "venue name",
+    long: "0.00001",
+    lat: "50.0001"
+    }
+
+- data structure of venues:
+
+  [ venue1, venue2, venue3 ]

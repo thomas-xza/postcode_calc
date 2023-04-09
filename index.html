@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="./css/normalize.css">
+
+<link rel="stylesheet" href="./css/stylize.css">
+
+<title>location calculator</title>
+
+</head>
+
+<body>
+
+
+<script type="importmap">
+  {
+    "imports": {
+      "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+    }
+  }
+</script>
+
+
+<script type="module">
+import { createApp, ref } from 'vue'
+
+createApp({
+  setup() {
+    const count = ref(0)
+
+    function increment() {
+      count.value++
+    }
+
+    return {
+      count,
+      increment
+    }
+  }
+}).mount('#app')
+</script>
+
+
+<div id="app">
+
+  {{ count }}
+
+  Origins:<br>
+  <textarea v-model="origins" placeholder="add multiple lines"></textarea>
+  
+  <br><br>
+  
+  Destinations:<br>
+  <textarea v-model="destinations" placeholder="add multiple lines"></textarea>
+
+  <br><br>
+
+  <button @click="test_func">Calculate distances from origins to destinations</button>
+
+  {{ message }}
+
+</div>
+
+
+</body>
+
+</html>
