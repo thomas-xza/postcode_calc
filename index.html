@@ -39,7 +39,7 @@ createApp({
 			  'EC4M 8AD');
       
       const dests = ref('N1 9AL, Kings Cross St. Pancras\n' +
-			'EH1 1BB, Edinburgh Waverley\n');
+			'EH1 1BB, Edinburgh Waverley');
 
       const status = ref(0);
 
@@ -52,13 +52,16 @@ createApp({
 
 	  const [origin_objs, dest_objs] = setup_data_structs();
 
-	  coords_via_api(origin_objs);
+	  const coord_origin_objs = coords_via_api(origin_objs);
 
-	  // console.log(origin_objs);
+	  const coord_dest_objs = coords_via_api(dest_objs);
+
+	  console.log(coord_origin_objs);
+
+	  console.log(coord_dest_objs);
 
       };
       
-
       
       async function coords_via_api(location_objs) {
 
@@ -71,6 +74,8 @@ createApp({
 	  console.log("this should be last");
 
 	  console.log(new_location_objs);
+
+	  return new_location_objs;
 
       };
       
@@ -109,9 +114,9 @@ createApp({
 
       function setup_data_structs() {
 
-	  const origin_array = origins.value.split("\n");
+	  const origin_array = origins.value.trim().split("\n");
 
-	  const dest_array = dests.value.split("\n");
+	  const dest_array = dests.value.trim().split("\n");
 
 	  const origin_objs = origin_array.map(
 
@@ -143,33 +148,7 @@ createApp({
 
       }
 
-      
-      // async function build_mapbox_urls(postcode, index) {
-
-      // 	  const mapbox_api_key = "pk.eyJ1IjoidGVzdC14emEiLCJhIjoiY2xnOXNiaWRvMWFtcDNlcWxzZjRmZDdldSJ9.lKZ_CDvdIh1Y9dw2DGjbOA";
-
-      // 	  const mapbox_json_url =
-      // 		"https://api.mapbox.com/geocoding/v5/mapbox.places/" +
-      // 		postcode + ", United Kingdom.json?access_token=" +
-      // 		mapbox_api_key;
-
-      // 	  const res = await fetch(mapbox_json_url);
-
-      // 	  const mapbox_json = await res.json();
-
-      // 	  const top_hit_coords = 
-
-      // 	  console.log(top_hit_coords);
-
-      // 	  return {
-      // 	      "postcode": postcode,
-      // 	      "long": top_hit_coords[0],
-      // 	      "lat": top_hit_coords[1]
-      // 	  };
-
-      // }
-
-
+    
     return {
 	test,
 	origins,
