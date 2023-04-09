@@ -31,15 +31,32 @@ import { createApp, ref } from 'vue'
 
 createApp({
   setup() {
-    const count = ref(0)
 
-    function increment() {
-      count.value++
-    }
+      const test = ref(0);
+
+      const origins = ref('SW1A 0AA');
+      
+      const dests = ref('N1 9AL, "Kings Cross St. Pancras"\n' +
+			'EH1 1BB, "Edinburgh Waverley"\n');
+
+      const status = ref(0);
+      
+      function find_distances () {
+
+	  status.value = 1
+
+	  
+
+	  console.log(status.value);
+
+      }
 
     return {
-      count,
-      increment
+	test,
+	origins,
+	dests,
+	status,
+	find_distances
     }
   }
 }).mount('#app')
@@ -48,21 +65,20 @@ createApp({
 
 <div id="app">
 
-  {{ count }}
+  {{ test }}
 
   Origins:<br>
-  <textarea v-model="origins" placeholder="add multiple lines"></textarea>
+  <textarea v-model="origins"></textarea>
   
   <br><br>
   
   Destinations:<br>
-  <textarea v-model="destinations" placeholder="add multiple lines"></textarea>
+  <textarea v-model="dests"></textarea>
 
   <br><br>
 
-  <button @click="test_func">Calculate distances from origins to destinations</button>
-
-  {{ message }}
+  <button @click="find_distances" v-if="status === 0">Calculate distances from origins to destinations</button>
+  <p v-else-if="status === 1">Part 1: Finding co-ordinates of postcodes...</p>
 
 </div>
 
