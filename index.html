@@ -60,6 +60,8 @@ createApp({
 
 	  console.log(coord_dest_objs);
 
+	  status.value = 2;
+
       };
       
       
@@ -102,6 +104,9 @@ createApp({
 
       
       function postcode_to_url(postcode) {
+
+          //  Note: limit as of 2023-04 is 600 geocode requests/minute
+	  //  https://docs.mapbox.com/api/overview/
 
 	  const mapbox_api_key = "pk.eyJ1IjoidGVzdC14emEiLCJhIjoiY2xnOXNiaWRvMWFtcDNlcWxzZjRmZDdldSJ9.lKZ_CDvdIh1Y9dw2DGjbOA";
 
@@ -166,17 +171,20 @@ createApp({
   {{ test }}
 
   Origins:<br>
-  <textarea v-model="origins"></textarea>
+  <textarea v-model="origins"></textarea><br>
+  Note: max conversions to co-ordinates per minute is 600 (Mapbox API)
   
   <br><br>
   
   Destinations:<br>
-  <textarea v-model="dests"></textarea>
+  <textarea v-model="dests"></textarea><br>
+  Note: please only 1 comma (,) per line else there are errors
 
   <br><br>
 
   <button @click="find_distances" v-if="status === 0">Calculate distances from origins to destinations</button>
   <p v-else-if="status === 1">Part 1: Finding co-ordinates of postcodes...</p>
+  <p v-else-if="status === 2">Part 2: Finding distances between source and destination co-ordinates...</p>
 
 </div>
 
