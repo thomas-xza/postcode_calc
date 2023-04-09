@@ -34,22 +34,54 @@ createApp({
 
       const test = ref(0);
 
-      const origins = ref('SW1A 0AA');
+      const origins = ref('SW1A 0AA\n' +
+			  'WC2A 2LL\n' +
+			  'EC4M 8AD');
       
       const dests = ref('N1 9AL, "Kings Cross St. Pancras"\n' +
 			'EH1 1BB, "Edinburgh Waverley"\n');
 
       const status = ref(0);
-      
+
       function find_distances () {
 
-	  status.value = 1
+	  status.value = 1;
 
-	  
+	  const origins_array = origins.value.split("\n");
 
-	  console.log(status.value);
+	  const dests_array = dests.value.split("\n");
+
+	  const origin_objs = origins_array.map(find_coords);
+
+	  console.log("late" + origin_objs.length + origin_objs);
 
       }
+
+      async function find_coords(postcode, index) {
+
+	  const mapbox_api_key = "pk.eyJ1IjoidGVzdC14emEiLCJhIjoiY2xnOXNiaWRvMWFtcDNlcWxzZjRmZDdldSJ9.lKZ_CDvdIh1Y9dw2DGjbOA";
+
+	  const mapbox_json_url =
+		"https://api.mapbox.com/geocoding/v5/mapbox.places/" +
+		postcode + ", United Kingdom.json?access_token=" +
+		mapbox_api_key;
+
+	  const res = await fetch(mapbox_json_url);
+
+	  const mapbox_json = await res.json();
+
+	  const top_hit_coords = mapbox_json.features[0].geometry.coordinates;
+
+	  console.log(top_hit_coords);
+
+	  return {
+	      "postcode": postcode,
+	      "long": top_hit_coords[0],
+	      "lat": top_hit_coords[1]
+	  };
+
+      }
+
 
     return {
 	test,
