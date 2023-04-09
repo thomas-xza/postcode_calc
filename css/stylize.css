@@ -1,4 +1,12 @@
+
+body {
+
+    color: white;
+    background-color: black;
+
+}
+
 textarea {
     width: 50%;
-    height: 25em;
+    height: 5em;
 }

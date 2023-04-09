@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- <link rel="stylesheet" href="./css/normalize.css"> -->
+<link rel="stylesheet" href="./css/normalize.css">
 
-<!-- <link rel="stylesheet" href="./css/stylize.css"> -->
+<link rel="stylesheet" href="./css/stylize.css">
 
 <title>location calculator</title>
 
@@ -43,38 +43,69 @@ createApp({
 
       const status = ref(0);
 
+
+
       
-      // async function fetch_urls(url_array) {
-
-      // 	  Promise.all(url_array.map(url =>
-      // 	      fetch(url)
-      // 		  .then(checkStatus)                 
-      // 		  .then(parseJSON)
-      // 		  .catch(logError)
-      // 	  ))
-      // 	      .then(data => {
-      // 		  // do something with the data
-      // 	      })
-
-	  
-      // 	  const results = await Promise.all(
-      // 	      urls.map((url) => fetch(url).then( (r) => r.json() ))
-      // 	  );
-	  
-      // 	  console.log(JSON.stringify(results, null, 2));
-      // }
-
       function find_distances () {
 
 	  status.value = 1;
 
 	  const [origin_objs, dest_objs] = setup_data_structs();
 
-	  console.log(origin_objs);
+	  coords_via_api(origin_objs);
 
-	  console.log(dest_objs);
+	  // console.log(origin_objs);
 
-      }
+      };
+      
+
+      
+      async function coords_via_api(location_objs) {
+
+	  console.log(location_objs[0]);
+
+	  const fetches = location_objs.map(fetch_data);
+
+	  const new_location_objs = await Promise.all(fetches);
+
+	  console.log("this should be last");
+
+	  console.log(new_location_objs);
+
+      };
+      
+
+      async function fetch_data(location_obj, index) {
+
+	  const url = postcode_to_url(location_obj["postcode"]);
+
+	  const mapbox_res = await fetch(url);
+	  
+	  const mapbox_json = await mapbox_res.json();
+
+	  const top_hit_coords = mapbox_json.features[0].geometry.coordinates;
+
+	  location_obj["long"] = top_hit_coords[0];
+
+	  location_obj["lat"] = top_hit_coords[1];
+
+	  console.log(index + "finished");
+
+	  return location_obj;
+
+      };
+
+      
+      function postcode_to_url(postcode) {
+
+	  const mapbox_api_key = "pk.eyJ1IjoidGVzdC14emEiLCJhIjoiY2xnOXNiaWRvMWFtcDNlcWxzZjRmZDdldSJ9.lKZ_CDvdIh1Y9dw2DGjbOA";
+
+	  return "https://api.mapbox.com/geocoding/v5/mapbox.places/" +
+	      postcode + ", United Kingdom.json?access_token=" +
+	      mapbox_api_key;
+
+      };
+      
 
       function setup_data_structs() {
 
@@ -97,8 +128,6 @@ createApp({
 
 	      item => {
 
-		  console.log(item);
-
 		  const postcode = item.split(",")[0];
 
 		  const name = item.split(",")[1];
@@ -114,11 +143,7 @@ createApp({
 
       }
 
-      function array_of_objs(array) {
-
-	  return array
-      };
-
+      
       // async function build_mapbox_urls(postcode, index) {
 
       // 	  const mapbox_api_key = "pk.eyJ1IjoidGVzdC14emEiLCJhIjoiY2xnOXNiaWRvMWFtcDNlcWxzZjRmZDdldSJ9.lKZ_CDvdIh1Y9dw2DGjbOA";
@@ -132,7 +157,7 @@ createApp({
 
       // 	  const mapbox_json = await res.json();
 
-      // 	  const top_hit_coords = mapbox_json.features[0].geometry.coordinates;
+      // 	  const top_hit_coords = 
 
       // 	  console.log(top_hit_coords);
 
