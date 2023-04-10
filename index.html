@@ -45,6 +45,8 @@ createApp({
 
       const blah = ref('');
 
+      const final_csv = ref('');
+
       find_distances();
 
 
@@ -52,11 +54,7 @@ createApp({
 
 	  status.value = 1;
 
-	  console.log('part 1');
-
 	  const [origin_objs, dest_objs] = setup_data_structs();
-
-	  console.log('part 2');
 
 	  const coord_origin_objs_prom = coords_via_api(origin_objs);
 
@@ -79,9 +77,65 @@ createApp({
 
 	  console.log(origin_objs);
 
+	  status.value = 3;
+
+	  const sorted_objs = sort_data(origin_objs);
+
+	  format_data(sorted_objs);
+
 	  // const origin_objs_w_distances = calc_distances(origin_objs);
 
-      }
+      };
+
+
+      function format_data(origin_objs) {
+
+	  origin_objs.forEach(
+
+	      obj => (
+
+		  console.log(obj["postcode"] + "," + format_iter_dests(obj))
+		      
+		  )
+
+	  );
+
+      };
+
+      function format_iter_dests(dests_objs) {
+
+	  const csv_line_part = ''
+
+	  dests_objs.forEach(
+
+	      obj => (
+
+		  
+
+	      )
+
+	  );
+
+      };
+
+
+      function sort_data(objs) {
+
+	  console.log(objs);
+
+	  const new_objs = objs.map (
+
+	      obj => (
+
+		  { ...obj,
+		    "dests": obj["dests"].sort((a, b) => (a.distance > b.distance) ? 1 : -1) }
+		  
+	      )
+	  );
+
+	  return new_objs;
+
+      };
       
       
       function merge_objs(origin_objs, dest_objs) {
@@ -101,7 +155,7 @@ createApp({
 
 	  return new_origin_objs;
 
-      }
+      };
 
 
       function augment_dest_objs(origin_obj, dest_objs) {
@@ -116,7 +170,7 @@ createApp({
 
 	  return new_dest_objs;
 	  
-      }
+      };
 
 
       function compute_distance(origin_obj, dest_obj) {
@@ -127,11 +181,11 @@ createApp({
 
 	  const distance = Math.sqrt(long_dist * long_dist + lat_dist * lat_dist);
 
-	  console.log(long_dist, lat_dist, distance)
+	  // console.log(long_dist, lat_dist, distance)
 
 	  return distance;
 
-      }
+      };
       
 
       async function coords_via_api(location_objs) {
@@ -240,10 +294,10 @@ createApp({
     
     return {
 	test,
-	blah,
 	origins,
 	dests,
 	status,
+	final_csv,
 	find_distances
     };
       
@@ -254,25 +308,37 @@ createApp({
 
 <div id="app">
 
+  <div class="cols">
+
   {{ test }}
 
-  Origins:<br>
+  <strong>Origins:</strong><br>
   <textarea v-model="origins"></textarea><br>
-  Note: max conversions to co-ordinates per minute is 600 (Mapbox API)
+  Note: max postcode to co-ordinates conversions per minute is 600 (Mapbox API)
   
   <br><br>
   
-  Destinations:<br>
+  <strong>Destinations:</strong><br>
   <textarea v-model="dests"></textarea><br>
-  Note: please only 1 comma (,) per line else there are errors
+  Note: please only 1 comma (,) per line else the name will be cut short
 
   <br><br>
+
+  </div>
 
   <button @click="find_distances" v-if="status === 0">Calculate distances from origins to destinations</button>
-  <p v-else-if="status === 1">Part 1: Finding co-ordinates of postcodes...</p>
-  <p v-else-if="status === 2">Part 2: Finding distances between source and destination co-ordinates...</p>
+  <p v-else-if="status === 1">Loading part #1: Finding co-ordinates of postcodes...</p>
+  <p v-else-if="status === 2">Loading part #2: Finding distances between source and destination co-ordinates...</p>
+  <p v-else-if="status === 3">Loading part #3: Sorting and formatting data...</p>
+  <p v-else-if="status === 4">Final CSV:<br>
+    <textarea v-model="final_csv"></textarea>
 
-  <strong>{{ blah }}</strong>
+    <br><br>
+
+    Raw data structures dump:<br>
+    <textarea v-model="raw_dump"></textarea><br>
+  </p>
+  
 
 </div>
 
