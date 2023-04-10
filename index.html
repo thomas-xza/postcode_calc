@@ -49,6 +49,32 @@ createApp({
       const raw_data = ref('');
       
 
+      function download_csv() {
+
+	  const date = new Date();
+
+	  const filename = 'distances_' + date.getFullYear() + '_' +
+		date.getMonth() + '_' + date.getDate() + '.csv';
+
+	  console.log(filename);
+
+          let element = document.createElement('a');
+	  
+	  element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(final_csv));
+	  
+	  element.setAttribute('download', filename);
+
+	  element.style.display = 'none';
+	  
+	  document.body.appendChild(element);
+
+	  element.click();
+	  
+	  document.body.removeChild(element);  
+	  
+      }
+      
+
       function find_distances() {
 
 	  status.value = 1;
@@ -314,7 +340,8 @@ createApp({
 	status,
 	final_csv,
 	raw_data,
-	find_distances
+	find_distances,
+	download_csv
     };
       
   }
@@ -372,7 +399,9 @@ createApp({
   <p v-else-if="status === 3">Loading part #3: Sorting and formatting data...</p>
   
   <p v-else-if="status === 4"><strong>Final CSV:</strong><br>
-    <textarea v-model="final_csv"></textarea><br>
+    <button @click="download_csv">Download</button>
+  
+  <textarea v-model="final_csv"></textarea><br>
     Note: the order will accurate, but the metre measurements are an approximation!
 
     <br><br>

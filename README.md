@@ -49,6 +49,9 @@ The co-ordinate distance is 5.4
 
 So multiply co-ordinate distance by 99 * 1000 and round to nearest integer.
 
+The download button was shamelessly copied from Raymond Camden, as it seemed to require knowing the quirks of Vue:
+https://www.raymondcamden.com/2020/12/15/vue-quick-shot-downloading-data-as-a-file
+
 Regarding data structures, all the functions revolve around gradually
 building up the below array of objects. There is a little data
 duplication, but inevitably destination info has to be stored amongst
