@@ -43,10 +43,10 @@ createApp({
 
       const status = ref(0);
 
+      find_distances();
 
 
-      
-      function find_distances () {
+      async function find_distances() {
 
 	  status.value = 1;
 
@@ -54,26 +54,40 @@ createApp({
 
 	  const coord_origin_objs = coords_via_api(origin_objs);
 
-	  const coord_dest_objs = coords_via_api(dest_objs);
+	  const coord_dest_objs = await Promise.resolve(coords_via_api(dest_objs));
 
-	  console.log(coord_origin_objs);
+	  console.log('find_distances()');
 
 	  console.log(coord_dest_objs);
 
 	  status.value = 2;
+
+	  // cons dist_origin_objs = calc_distances(coord_origin_objs, coord_dest_objs);
+
+      };
+      
+
+      function calc_distances(origin_objs, dest_objs) {
+
+	  console.log(origin_objs, dest_objs);
+
+	  // const origin_objs_w_dests = origin_objs.map(
+	  //     (origin_obj) =>
+	  //     origin_obj['dests'] = _)
 
       };
       
       
       async function coords_via_api(location_objs) {
 
-	  console.log(location_objs[0]);
+	  //  [ { ... }, { ... }, { ... } ]
+	  //  =>  [ { ..., long: "0.3402", lat: "0.3497" }, ... ]
 
-	  const fetches = location_objs.map(fetch_data);
+	  // console.log(location_objs[0]);
 
-	  const new_location_objs = await Promise.all(fetches);
+	  const new_location_objs = await Promise.resolve(coords_via_api_intermed(location_objs));
 
-	  console.log('this should be last');
+	  console.log("coords_via_api()")
 
 	  console.log(new_location_objs);
 
@@ -82,7 +96,24 @@ createApp({
       };
       
 
+      async function coords_via_api_intermed(location_objs) {
+
+	  const new_objs = await Promise.all(location_objs.map(fetch_data));
+	  
+	  console.log(new_objs);
+
+	  return new_objs;
+	  
+
+      };
+
+
       async function fetch_data(location_obj, index) {
+
+	  //  { postcode: "AAA AAA", ... }
+	  //  =>  { postcode: "AAA AAA", ...,
+	  //        long: "0.002020",
+	  //        lat: "-0.304373" }
 
 	  const url = postcode_to_url(location_obj['postcode']);
 
@@ -96,7 +127,7 @@ createApp({
 
 	  location_obj['lat'] = top_hit_coords[1];
 
-	  console.log(index + 'finished');
+	  // console.log(index + 'fetched');
 
 	  return location_obj;
 
@@ -108,6 +139,9 @@ createApp({
           //  Note: limit as of 2023-04 is 600 geocode requests/minute
 	  //  https://docs.mapbox.com/api/overview/
 
+	  //  "AAA AAA"
+	  //  => "https://api.mapbox.com/...AAA AAA..."
+
 	  const mapbox_api_key = 'pk.eyJ1IjoidGVzdC14emEiLCJhIjoiY2xnOXNiaWRvMWFtcDNlcWxzZjRmZDdldSJ9.lKZ_CDvdIh1Y9dw2DGjbOA';
 
 	  return 'https://api.mapbox.com/geocoding/v5/mapbox.places/' +
@@ -116,8 +150,15 @@ createApp({
 
       };
       
-
+      
       function setup_data_structs() {
+
+	  //  [ "AAA AAA", "BBB BBB", ... ]
+	  //  => [ { postcode: "AAA AAA" }, ... ]
+	  
+	  //  [ "CCC CCC, blah", "DDD DDD, blah2" ... ]
+	  //  => [ { postcode: "BBB BBB",
+	  //         name: "blah" }, ... ]
 
 	  const origin_array = origins.value.trim().split('\n');
 
@@ -151,7 +192,7 @@ createApp({
 
 	  return [origin_objs, dest_objs];
 
-      }
+      };
 
     
     return {
@@ -160,7 +201,8 @@ createApp({
 	dests,
 	status,
 	find_distances
-    }
+    };
+      
   }
 }).mount('#app')
 </script>
