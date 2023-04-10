@@ -47,9 +47,7 @@ createApp({
       let final_csv = ref('Origin');
 
       const raw_data = ref('');
-
-      find_distances();
-
+      
 
       function find_distances() {
 
@@ -125,7 +123,7 @@ createApp({
 
 	      obj => (
 
-		  obj['name'].trim() + ',' + Math.floor(obj['distance'] * 99)
+		  obj['name'].trim() + ',' + Math.floor(obj['distance'] * 99 * 1000)
 
     )
     )
@@ -375,7 +373,7 @@ createApp({
   
   <p v-else-if="status === 4"><strong>Final CSV:</strong><br>
     <textarea v-model="final_csv"></textarea><br>
-    Note: the order will accurate, but the kilometer measurements are an approximation!
+    Note: the order will accurate, but the metre measurements are an approximation!
 
     <br><br>
 
