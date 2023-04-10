@@ -44,7 +44,7 @@ createApp({
 
       const blah = ref('');
 
-      const final_csv = ref('Origin,Location_1,Distance,Location_2,Distance,Location_3,Distance,Location_4,Distance,Location_5,Distance');
+      let final_csv = ref('Origin');
 
       const raw_data = ref('');
 
@@ -88,20 +88,27 @@ createApp({
 
 	  status.value = 4;
 
-	  // const origin_objs_w_distances = calc_distances(origin_objs);
-
       };
 
 
       function format_data(origin_objs) {
 
+	  origin_objs[0]['dests'].forEach( (element, index) =>
+
+	      final_csv.value = final_csv.value + ',Location_' + index + ',Distance'
+
+	  );
+
+	  final_csv.value = final_csv.value + '\n';
+
+	  console.log(final_csv.value);
+
 	  origin_objs.forEach(
 
 	      obj => (
-		  console.log(
-		      obj["postcode"] + "," +
-		      format_dest_distances(obj))
-	      )
+		  final_csv.value = final_csv.value +
+		      obj['postcode'] + ',' +
+		      format_dest_distances(obj) + '\n')
 
 	  );
 
@@ -114,15 +121,14 @@ createApp({
 
 	  const csv_line_part = ''
 
-	  const csv_line_array = dests_objs["dests"].map(
+	  const csv_line_array = dests_objs['dests'].map(
 
 	      obj => (
 
-		  obj["name"] + ',' + Math.floor(obj["distance"] * 99)
+		  obj['name'].trim() + ',' + Math.floor(obj['distance'] * 99)
 
-	      )
-
-	  );
+    )
+    )
 
 	  return csv_line_array.join(',');
 
@@ -138,7 +144,7 @@ createApp({
 	      obj => (
 
 		  { ...obj,
-		    "dests": obj["dests"].sort((a, b) => (a.distance > b.distance) ? 1 : -1) }
+		    'dests': obj['dests'].sort((a, b) => (a.distance > b.distance) ? 1 : -1) }
 		  
 	      )
 	  );
@@ -150,15 +156,17 @@ createApp({
       
       function merge_objs(origin_objs, dest_objs) {
 
-	  //  {  postcode: "AAA AAA", ... }
+	  //  {  postcode: 'AAA AAA', ... }
 	  //  -->
-	  //    {  postcode: "AAA AAA", ...
-	  //       dests: [ { ... }, { ... }, { ... } ]  }
+	  //    {  postcode: 'AAA AAA', ...
+    //       dests: [ { ... }, { ... }, { ... } ]  }
+
+    
 
 	  const new_origin_objs = origin_objs.map(
 
 	      obj => (
-		  {...obj, "dests": augment_dest_objs(obj, dest_objs)}
+		  {...obj, 'dests': augment_dest_objs(obj, dest_objs)}
 	      )
 
 	  );
@@ -173,7 +181,7 @@ createApp({
 	  const new_dest_objs = dest_objs.map( dest_obj => (
 
 	      { ...dest_obj,
-		"distance": compute_distance(origin_obj, dest_obj) }
+		'distance': compute_distance(origin_obj, dest_obj) }
 
 	  )
 				       );
@@ -185,9 +193,9 @@ createApp({
 
       function compute_distance(origin_obj, dest_obj) {
 
-	  const long_dist = origin_obj["long"] - dest_obj["long"];
+	  const long_dist = origin_obj['long'] - dest_obj['long'];
 
-	  const lat_dist = origin_obj["lat"] - dest_obj["lat"];
+	  const lat_dist = origin_obj['lat'] - dest_obj['lat'];
 
 	  const distance = Math.sqrt(long_dist * long_dist + lat_dist * lat_dist);
 
@@ -201,7 +209,7 @@ createApp({
       async function coords_via_api(location_objs) {
 
 	  //  [ { ... }, { ... }, { ... } ]
-	  //  -->  [ { ..., long: "0.3402", lat: "0.3497" }, ... ]
+	  //  -->  [ { ..., long: '0.3402', lat: '0.3497' }, ... ]
 
 	  const new_objs = await Promise.all(location_objs.map(fetch_data));
 
@@ -217,10 +225,10 @@ createApp({
 
       async function fetch_data(location_obj, index) {
 
-	  //  { postcode: "AAA AAA", ... }
-	  //  -->  { postcode: "AAA AAA", ...,
-	  //        long: "0.002020",
-	  //        lat: "-0.304373" }
+	  //  { postcode: 'AAA AAA', ... }
+	  //  -->  { postcode: 'AAA AAA', ...,
+	  //        long: '0.002020',
+	  //        lat: '-0.304373' }
 
 	  const url = postcode_to_url(location_obj['postcode']);
 
@@ -246,8 +254,8 @@ createApp({
           //  Note: limit as of 2023-04 is 600 geocode requests/minute
 	  //  https://docs.mapbox.com/api/overview/
 
-	  //  "AAA AAA"
-	  //  -->  "https://api.mapbox.com/...AAA AAA..."
+	  //  'AAA AAA'
+	  //  -->  'https://api.mapbox.com/...AAA AAA...'
 
 	  const mapbox_api_key = 'pk.eyJ1IjoidGVzdC14emEiLCJhIjoiY2xnOXNiaWRvMWFtcDNlcWxzZjRmZDdldSJ9.lKZ_CDvdIh1Y9dw2DGjbOA';
 
@@ -260,12 +268,12 @@ createApp({
       
       function setup_data_structs() {
 
-	  //  [ "AAA AAA", "BBB BBB", ... ]
-	  //  -->  [ { postcode: "AAA AAA" }, ... ]
+	  //  [ 'AAA AAA', 'BBB BBB', ... ]
+	  //  -->  [ { postcode: 'AAA AAA' }, ... ]
 	  
-	  //  [ "CCC CCC, blah", "DDD DDD, blah2" ... ]
-	  //  -->  [ { postcode: "BBB BBB",
-	  //          name: "blah" }, ... ]
+	  //  [ 'CCC CCC, blah', 'DDD DDD, blah2' ... ]
+	  //  -->  [ { postcode: 'BBB BBB',
+	  //          name: 'blah' }, ... ]
 
 	  const origin_array = origins.value.trim().split('\n');
 
@@ -358,16 +366,20 @@ createApp({
   </div>
 
   <button @click="find_distances" v-if="status === 0">Calculate distances from origins to destinations</button>
+  
   <p v-else-if="status === 1">Loading part #1: Finding co-ordinates of postcodes...</p>
+  
   <p v-else-if="status === 2">Loading part #2: Finding distances between source and destination co-ordinates...</p>
+  
   <p v-else-if="status === 3">Loading part #3: Sorting and formatting data...</p>
+  
   <p v-else-if="status === 4"><strong>Final CSV:</strong><br>
     <textarea v-model="final_csv"></textarea><br>
     Note: the order will accurate, but the kilometer measurements are an approximation!
 
     <br><br>
 
-    <strong>Raw data structures dump:</strong><br>
+    <strong>Raw data structures JSON:</strong><br>
     <textarea v-model="raw_data"></textarea><br>
   </p>
   
