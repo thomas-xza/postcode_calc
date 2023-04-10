@@ -23,4 +23,6 @@ THE FLOW
 
   [ object, object, object ]
 
-5. iterate through each origin
+5. iterate through each origin?
+
+6. < plan.md abandoned >
