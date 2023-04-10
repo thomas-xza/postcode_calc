@@ -20,15 +20,16 @@
 <script type="importmap">
   {
       "imports": {
-      "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
-	  // "vue": "./js/vue-3.2.47.js"
+	  "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js",
+	  "vue_frozen": "https://postcode-calc.pages.dev/js/vue-3.2.47.js"
     }
   }
 </script>
 
  
 <script type="module">
-import { createApp, ref } from 'vue'
+import { createApp, ref } from 'vue_frozen'
+	  // "vue": "./js/vue-3.2.47.js"
 
 createApp({
   setup() {
