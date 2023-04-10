@@ -38,7 +38,7 @@ createApp({
 			  'WC2A 2LL\n' +
 			  'EC4M 8AD');
       
-      const dests = ref('N1 9AL, Kings Cross St. Pancras\n' +
+      const dests = ref('N1C 4BA, Kings Cross St. Pancras\n' +
 			'EH1 1BB, Edinburgh Waverley');
 
       const status = ref(0);
@@ -77,40 +77,59 @@ createApp({
 
 	  const origin_objs = merge_objs(data[0], data[1]);
 
-	  const origin_objs_w_distances = calc_distances(origin_objs);
+	  console.log(origin_objs);
+
+	  // const origin_objs_w_distances = calc_distances(origin_objs);
 
       }
-
-
-      function calc_distances(origin_objs, dest_objs) {
-
-	  console.log(origin_objs, dest_objs);
-
-	  // const origin_objs_w_dests = origin_objs.map(
-	  //     (origin_obj) =>
-	  //     origin_obj['dests'] = _)
-
-      };
       
       
       function merge_objs(origin_objs, dest_objs) {
 
 	  //  {  postcode: "AAA AAA", ... }
-	  //  =>
+	  //  -->
 	  //    {  postcode: "AAA AAA", ...
 	  //       dests: [ { ... }, { ... }, { ... } ]  }
 
 	  const new_origin_objs = origin_objs.map(
 
 	      obj => (
-		  {...obj, "dests": dest_objs}
+		  {...obj, "dests": augment_dest_objs(obj, dest_objs)}
 	      )
 
 	  );
 
-	  console.log(new_origin_objs);
+	  return new_origin_objs;
 
-	  return new_origin_objs
+      }
+
+
+      function augment_dest_objs(origin_obj, dest_objs) {
+
+	  const new_dest_objs = dest_objs.map( dest_obj => (
+
+	      { ...dest_obj,
+		"distance": compute_distance(origin_obj, dest_obj) }
+
+	  )
+				       );
+
+	  return new_dest_objs;
+	  
+      }
+
+
+      function compute_distance(origin_obj, dest_obj) {
+
+	  const long_dist = origin_obj["long"] - dest_obj["long"];
+
+	  const lat_dist = origin_obj["lat"] - dest_obj["lat"];
+
+	  const distance = Math.sqrt(long_dist * long_dist + lat_dist * lat_dist);
+
+	  console.log(long_dist, lat_dist, distance)
+
+	  return distance;
 
       }
       
@@ -118,7 +137,7 @@ createApp({
       async function coords_via_api(location_objs) {
 
 	  //  [ { ... }, { ... }, { ... } ]
-	  //  =>  [ { ..., long: "0.3402", lat: "0.3497" }, ... ]
+	  //  -->  [ { ..., long: "0.3402", lat: "0.3497" }, ... ]
 
 	  const new_objs = await Promise.all(location_objs.map(fetch_data));
 
@@ -135,7 +154,7 @@ createApp({
       async function fetch_data(location_obj, index) {
 
 	  //  { postcode: "AAA AAA", ... }
-	  //  =>  { postcode: "AAA AAA", ...,
+	  //  -->  { postcode: "AAA AAA", ...,
 	  //        long: "0.002020",
 	  //        lat: "-0.304373" }
 
@@ -164,7 +183,7 @@ createApp({
 	  //  https://docs.mapbox.com/api/overview/
 
 	  //  "AAA AAA"
-	  //  => "https://api.mapbox.com/...AAA AAA..."
+	  //  -->  "https://api.mapbox.com/...AAA AAA..."
 
 	  const mapbox_api_key = 'pk.eyJ1IjoidGVzdC14emEiLCJhIjoiY2xnOXNiaWRvMWFtcDNlcWxzZjRmZDdldSJ9.lKZ_CDvdIh1Y9dw2DGjbOA';
 
@@ -178,11 +197,11 @@ createApp({
       function setup_data_structs() {
 
 	  //  [ "AAA AAA", "BBB BBB", ... ]
-	  //  => [ { postcode: "AAA AAA" }, ... ]
+	  //  -->  [ { postcode: "AAA AAA" }, ... ]
 	  
 	  //  [ "CCC CCC, blah", "DDD DDD, blah2" ... ]
-	  //  => [ { postcode: "BBB BBB",
-	  //         name: "blah" }, ... ]
+	  //  -->  [ { postcode: "BBB BBB",
+	  //          name: "blah" }, ... ]
 
 	  const origin_array = origins.value.trim().split('\n');
 
