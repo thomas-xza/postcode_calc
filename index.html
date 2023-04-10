@@ -10,7 +10,7 @@
 
 <link rel="stylesheet" href="./css/stylize.css">
 
-<title>location calculator</title>
+<title>Postcode distance calculator</title>
 
 </head>
 
@@ -36,7 +36,8 @@ createApp({
 
       const origins = ref('SW1A 0AA\n' +
 			  'WC2A 2LL\n' +
-			  'EC4M 8AD');
+			  'EC4M 8AD\n' +
+			  'M3 1WY');
       
       const dests = ref('N1C 4BA, Kings Cross St. Pancras\n' +
 			'EH1 1BB, Edinburgh Waverley');
@@ -94,19 +95,20 @@ createApp({
 
 	      obj => (
 
-		  console.log(obj["postcode"] + "," + format_iter_dests(obj))
+		  console.log(obj["postcode"] + "," + format_dest_distances(obj))
 		      
-		  )
+	      )
 
 	  );
 
       };
 
-      function format_iter_dests(dests_objs) {
+      
+      function format_dest_distances(dests_objs) {
 
 	  const csv_line_part = ''
 
-	  dests_objs.forEach(
+	  const csv_line_array = dests_objs.map(
 
 	      obj => (
 
@@ -115,6 +117,8 @@ createApp({
 	      )
 
 	  );
+
+	  return csv_line_array.join(',');
 
       };
 
@@ -308,7 +312,30 @@ createApp({
 
 <div id="app">
 
+  <h1>Postcode distance calculator</h1>
+    <h2><strong>How this works</strong></h2>
+
+    1. All the postcodes are simultaneously sent to Mapbox API, associated co-ordinates are received in reply
+    <br><br>
+
+    2. Rudimentary mathematics is run on each set of co-ordinates (Pythagoras)
+    <br><br>
+
+    3. The output is formatted as CSV for sorting with spreadsheet software etc.
+    <br><br>
+
+    <strong>Privacy notice:</strong> with the exception of postcode conversion, all data processing is done solely on the computer running this website, via client-side Javascript engines available within any modern web browser.
+    <br><br>
+
+    <em>Javascript by Thomas.</em>
+    <br><br><br>
+    
+
+    
+
+    
   <div class="cols">
+
 
   {{ test }}
 
@@ -330,8 +357,9 @@ createApp({
   <p v-else-if="status === 1">Loading part #1: Finding co-ordinates of postcodes...</p>
   <p v-else-if="status === 2">Loading part #2: Finding distances between source and destination co-ordinates...</p>
   <p v-else-if="status === 3">Loading part #3: Sorting and formatting data...</p>
-  <p v-else-if="status === 4">Final CSV:<br>
-    <textarea v-model="final_csv"></textarea>
+  <p v-else-if="status === 4"><strong>Final CSV:</strong><br>
+    <textarea v-model="final_csv"></textarea><br>
+    Note: the order will accurate, but the kilometer measurements are an approximation!
 
     <br><br>
 
