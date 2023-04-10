@@ -73,7 +73,7 @@ createApp({
 
 	  const new_location_objs = await Promise.all(fetches);
 
-	  console.log("this should be last");
+	  console.log('this should be last');
 
 	  console.log(new_location_objs);
 
@@ -84,7 +84,7 @@ createApp({
 
       async function fetch_data(location_obj, index) {
 
-	  const url = postcode_to_url(location_obj["postcode"]);
+	  const url = postcode_to_url(location_obj['postcode']);
 
 	  const mapbox_res = await fetch(url);
 	  
@@ -92,11 +92,11 @@ createApp({
 
 	  const top_hit_coords = mapbox_json.features[0].geometry.coordinates;
 
-	  location_obj["long"] = top_hit_coords[0];
+	  location_obj['long'] = top_hit_coords[0];
 
-	  location_obj["lat"] = top_hit_coords[1];
+	  location_obj['lat'] = top_hit_coords[1];
 
-	  console.log(index + "finished");
+	  console.log(index + 'finished');
 
 	  return location_obj;
 
@@ -108,10 +108,10 @@ createApp({
           //  Note: limit as of 2023-04 is 600 geocode requests/minute
 	  //  https://docs.mapbox.com/api/overview/
 
-	  const mapbox_api_key = "pk.eyJ1IjoidGVzdC14emEiLCJhIjoiY2xnOXNiaWRvMWFtcDNlcWxzZjRmZDdldSJ9.lKZ_CDvdIh1Y9dw2DGjbOA";
+	  const mapbox_api_key = 'pk.eyJ1IjoidGVzdC14emEiLCJhIjoiY2xnOXNiaWRvMWFtcDNlcWxzZjRmZDdldSJ9.lKZ_CDvdIh1Y9dw2DGjbOA';
 
-	  return "https://api.mapbox.com/geocoding/v5/mapbox.places/" +
-	      postcode + ", United Kingdom.json?access_token=" +
+	  return 'https://api.mapbox.com/geocoding/v5/mapbox.places/' +
+	      postcode + ', United Kingdom.json?access_token=' +
 	      mapbox_api_key;
 
       };
@@ -119,15 +119,15 @@ createApp({
 
       function setup_data_structs() {
 
-	  const origin_array = origins.value.trim().split("\n");
+	  const origin_array = origins.value.trim().split('\n');
 
-	  const dest_array = dests.value.trim().split("\n");
+	  const dest_array = dests.value.trim().split('\n');
 
 	  const origin_objs = origin_array.map(
 
 	      postcode => {
 		  
-		  return { "postcode": postcode }
+		  return { 'postcode': postcode }
 		  
 	      }
 
@@ -138,12 +138,12 @@ createApp({
 
 	      item => {
 
-		  const postcode = item.split(",")[0];
+		  const postcode = item.split(',')[0];
 
-		  const name = item.split(",")[1];
+		  const name = item.split(',')[1];
 
-		  return { "postcode": postcode,
-			   "name": name }
+		  return { 'postcode': postcode,
+			   'name': name }
 		  
 	      }
 
