@@ -32,8 +32,6 @@ import { createApp, ref } from 'vue'
 createApp({
   setup() {
 
-      const test = ref({});
-
       const origins = ref('SW1A 0AA\n' +
 			  'WC2A 2LL\n' +
 			  'EC4M 8AD\n' +
@@ -46,7 +44,9 @@ createApp({
 
       const blah = ref('');
 
-      const final_csv = ref('');
+      const final_csv = ref('Origin,Location_1,Distance,Location_2,Distance,Location_3,Distance,Location_4,Distance,Location_5,Distance');
+
+      const raw_data = ref('');
 
       find_distances();
 
@@ -82,7 +82,11 @@ createApp({
 
 	  const sorted_objs = sort_data(origin_objs);
 
+	  raw_data.value = JSON.stringify(sorted_objs);
+
 	  format_data(sorted_objs);
+
+	  status.value = 4;
 
 	  // const origin_objs_w_distances = calc_distances(origin_objs);
 
@@ -94,9 +98,9 @@ createApp({
 	  origin_objs.forEach(
 
 	      obj => (
-
-		  console.log(obj["postcode"] + "," + format_dest_distances(obj))
-		      
+		  console.log(
+		      obj["postcode"] + "," +
+		      format_dest_distances(obj))
 	      )
 
 	  );
@@ -106,13 +110,15 @@ createApp({
       
       function format_dest_distances(dests_objs) {
 
+	  console.log(dests_objs);
+
 	  const csv_line_part = ''
 
-	  const csv_line_array = dests_objs.map(
+	  const csv_line_array = dests_objs["dests"].map(
 
 	      obj => (
 
-		  
+		  obj["name"] + ',' + Math.floor(obj["distance"] * 99)
 
 	      )
 
@@ -297,11 +303,11 @@ createApp({
 
     
     return {
-	test,
 	origins,
 	dests,
 	status,
 	final_csv,
+	raw_data,
 	find_distances
     };
       
@@ -337,8 +343,6 @@ createApp({
   <div class="cols">
 
 
-  {{ test }}
-
   <strong>Origins:</strong><br>
   <textarea v-model="origins"></textarea><br>
   Note: max postcode to co-ordinates conversions per minute is 600 (Mapbox API)
@@ -363,8 +367,8 @@ createApp({
 
     <br><br>
 
-    Raw data structures dump:<br>
-    <textarea v-model="raw_dump"></textarea><br>
+    <strong>Raw data structures dump:</strong><br>
+    <textarea v-model="raw_data"></textarea><br>
   </p>
   
 

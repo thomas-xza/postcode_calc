@@ -41,6 +41,14 @@ works, to write unit tests. I also have not figured out how to split
 Javascript functions across files and still have them compatible with
 Vue.
 
+The rough estimate of converting the co-ordinate based distance to the
+kilometer distances is based on the following fact:
+
+London -> Edinburgh is 534 km
+The co-ordinate distance is 5.4
+
+So multiply co-ordinate distance by 99 and round to nearest integer.
+
 Regarding data structures, all the functions revolve around gradually
 building up the below array of objects. There is a little data
 duplication, but inevitably destination info has to be stored amongst
@@ -111,3 +119,4 @@ origin info, so it was just simpler to store all of it.
     ]
   }
 ]
+
