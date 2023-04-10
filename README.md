@@ -3,10 +3,10 @@
 Learnt alot about the quirks of Javascript's asynchronous execution as
 a result of the API calls involved in this project.
 
-Async functions always return a promise, and it is hard to unpack a
-promise once returned to a synchronous function. I figured out a
-workaround to get back to synchronous execution
-by using something along the lines of:
+Javascript's async functions always return a promise, and it is hard
+to unpack a promise once returned to a synchronous function. I figured
+out a workaround to get back to synchronous execution by using
+something along the lines of:
 
     const final_result = [];
 
@@ -42,12 +42,12 @@ Javascript functions across files and still have them compatible with
 Vue.
 
 The rough estimate of converting the co-ordinate based distance to the
-kilometer distances is based on the following fact:
+metre distances is based on the following fact:
 
-London -> Edinburgh is 534 km
+London -> Edinburgh is 534 * 1000 metres
 The co-ordinate distance is 5.4
 
-So multiply co-ordinate distance by 99 and round to nearest integer.
+So multiply co-ordinate distance by 99 * 1000 and round to nearest integer.
 
 Regarding data structures, all the functions revolve around gradually
 building up the below array of objects. There is a little data
