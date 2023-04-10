@@ -32,7 +32,7 @@ import { createApp, ref } from 'vue'
 createApp({
   setup() {
 
-      const test = ref(0);
+      const test = ref({});
 
       const origins = ref('SW1A 0AA\n' +
 			  'WC2A 2LL\n' +
@@ -43,29 +43,44 @@ createApp({
 
       const status = ref(0);
 
+      const blah = ref('');
+
       find_distances();
 
 
-      async function find_distances() {
+      function find_distances() {
 
 	  status.value = 1;
 
+	  console.log('part 1');
+
 	  const [origin_objs, dest_objs] = setup_data_structs();
 
-	  const coord_origin_objs = coords_via_api(origin_objs);
+	  console.log('part 2');
 
-	  const coord_dest_objs = await Promise.resolve(coords_via_api(dest_objs));
+	  const coord_origin_objs_prom = coords_via_api(origin_objs);
 
-	  console.log('find_distances()');
+	  const coord_dest_objs_prom = coords_via_api(dest_objs);
 
-	  console.log(coord_dest_objs);
+	  Promise.all([coord_origin_objs_prom, coord_dest_objs_prom]).then(
+  	      (data) => find_distances_part_two(data)
+	  );
+	  
+      };
+
+
+      function find_distances_part_two(data) {
 
 	  status.value = 2;
 
-	  // cons dist_origin_objs = calc_distances(coord_origin_objs, coord_dest_objs);
+	  console.log(data[0]);
 
-      };
-      
+	  const origin_objs = merge_objs(data[0], data[1]);
+
+	  const origin_objs_w_distances = calc_distances(origin_objs);
+
+      }
+
 
       function calc_distances(origin_objs, dest_objs) {
 
@@ -78,29 +93,38 @@ createApp({
       };
       
       
+      function merge_objs(origin_objs, dest_objs) {
+
+	  //  {  postcode: "AAA AAA", ... }
+	  //  =>
+	  //    {  postcode: "AAA AAA", ...
+	  //       dests: [ { ... }, { ... }, { ... } ]  }
+
+	  const new_origin_objs = origin_objs.map(
+
+	      obj => (
+		  {...obj, "dests": dest_objs}
+	      )
+
+	  );
+
+	  console.log(new_origin_objs);
+
+	  return new_origin_objs
+
+      }
+      
+
       async function coords_via_api(location_objs) {
 
 	  //  [ { ... }, { ... }, { ... } ]
 	  //  =>  [ { ..., long: "0.3402", lat: "0.3497" }, ... ]
 
-	  // console.log(location_objs[0]);
-
-	  const new_location_objs = await Promise.resolve(coords_via_api_intermed(location_objs));
-
-	  console.log("coords_via_api()")
-
-	  console.log(new_location_objs);
-
-	  return new_location_objs;
-
-      };
-      
-
-      async function coords_via_api_intermed(location_objs) {
-
 	  const new_objs = await Promise.all(location_objs.map(fetch_data));
+
+	  // console.log('coords_via_api()');
 	  
-	  console.log(new_objs);
+	  // console.log(new_objs);
 
 	  return new_objs;
 	  
@@ -197,6 +221,7 @@ createApp({
     
     return {
 	test,
+	blah,
 	origins,
 	dests,
 	status,
@@ -227,6 +252,8 @@ createApp({
   <button @click="find_distances" v-if="status === 0">Calculate distances from origins to destinations</button>
   <p v-else-if="status === 1">Part 1: Finding co-ordinates of postcodes...</p>
   <p v-else-if="status === 2">Part 2: Finding distances between source and destination co-ordinates...</p>
+
+  <strong>{{ blah }}</strong>
 
 </div>
 
