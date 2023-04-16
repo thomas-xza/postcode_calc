@@ -120,7 +120,8 @@ createApp({
 
 	  origin_objs[0]['dests'].forEach( (element, index) =>
 
-	      final_csv.value = final_csv.value + ',Location_' + index + ',Distance_' + index
+    final_csv.value =
+    `${final_csv.value},Origin_long,Origin_lat,Location_${index},Distance_${index}`
 
 	  );
 
@@ -132,7 +133,7 @@ createApp({
 
 	      obj => (
 		  final_csv.value = final_csv.value +
-		      obj['postcode'] + ',' +
+    `${obj['postcode']},${obj['long']},${obj['lat']},` +
 		      format_dest_distances(obj) + '\n')
 
 	  );
