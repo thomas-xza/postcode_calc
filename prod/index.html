@@ -17,18 +17,18 @@
 <body>
 
 
-<!-- <script type="importmap"> -->
-<!--   { -->
-<!--       "imports": { -->
-<!-- 	  "vue": "./js/vue-3.2.47.js" -->
-<!--       // "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js" -->
-<!--     } -->
-<!--   } -->
-<!-- </script> -->
+<script type="importmap">
+  {
+      "imports": {
+	  "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js",
+	  "vue_frozen": "https://unpkg.com/vue@3.2.47/dist/vue.esm-browser.js"
+    }
+  }
+</script>
 
  
 <script type="module">
-import { createApp, ref } from './js/vue-3.2.47.js'
+import { createApp, ref } from 'vue_frozen'
 
 createApp({
   setup() {
