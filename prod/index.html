@@ -107,7 +107,7 @@ createApp({
 
 	  const sorted_objs = sort_data(origin_objs);
 
-	  raw_data.value = JSON.stringify(sorted_objs);
+	  raw_data.value = JSON.stringify(sorted_objs).replaceAll(",", ",\n");
 
 	  format_data(sorted_objs);
 

@@ -45,7 +45,7 @@ createApp({
 
       const blah = ref('');
 
-      let final_csv = ref('Origin,Origin_long,Origin_lat');
+      let final_csv = ref('Origin,Longitude,Latitude,Borough');
 
       const raw_data = ref('');
       
@@ -107,7 +107,7 @@ createApp({
 
 	  const sorted_objs = sort_data(origin_objs);
 
-	  raw_data.value = JSON.stringify(sorted_objs).replaceAll(",", ",\n");
+	  raw_data.value = JSON.stringify(sorted_objs, null, 4);
 
 	  format_data(sorted_objs);
 
@@ -133,7 +133,7 @@ createApp({
 
 	      obj => (
 		  final_csv.value = final_csv.value +
-    `${obj['postcode']},${obj['long']},${obj['lat']},` +
+		      `${obj['postcode']},${obj['long']},${obj['lat']},${obj['borough']},` +
 		      format_dest_distances(obj) + '\n')
 
 	  );
@@ -268,6 +268,8 @@ createApp({
 
 	  location_obj['lat'] = top_hit_coords[1];
 
+	  location_obj['borough'] = mapbox_json.features[0].context[0].text;
+
 	  // console.log(index + 'fetched');
 
 	  return location_obj;
@@ -368,7 +370,7 @@ createApp({
     <strong>Privacy notice:</strong> with the exception of postcode conversion, all data processing is done solely on the computer running this website, via client-side Javascript engines available within any modern web browser.
     <br><br>
 
-    <em>Javascript by Thomas. Framework by Vue.js.</em>
+    <em>Javascript by Thomas. Framework by Vue.js v3.2.47.</em>
     <br><br><br>
     
 
