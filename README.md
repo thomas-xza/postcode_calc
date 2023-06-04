@@ -130,7 +130,7 @@ not so clear to me yet how to do that with Javascript.
 ##  TESTS
 
 Due to the simplicity of the web app, there are only integration
-tests. Debuggin was done by eye, following the console, as after
+tests. Debugging was done by eye, following the console, as after
 reading through Douglas Crockford's book, then reading through the
 Vue.js documentation, then beginning with experimenting, there wasn't
 alot of time left to read over how the 'Jest' testing library works,
