@@ -1,4 +1,9 @@
 
+##  QUICKSTART
+
+Open index.html, or alternatively check out [https://postcode-calc.pages.dev](https://postcode-calc.pages.dev)
+
+
 ##  DATA STRUCTURES
 
 Regarding data structures, all the functions revolve around gradually
