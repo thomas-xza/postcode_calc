@@ -268,7 +268,15 @@ createApp({
 
 	  location_obj['lat'] = top_hit_coords[1];
 
-	  location_obj['borough'] = mapbox_json.features[0].context[0].text;
+	  try {
+	 
+   	      location_obj['borough'] = mapbox_json.features[0].context[0].text;
+
+   	  } catch {
+
+   	      location_obj['borough'] = 'Unknown';
+
+          }
 
 	  // console.log(index + 'fetched');
 

@@ -124,12 +124,14 @@ not so clear to me yet how to do that with Javascript.
 
 ##  TESTS
 
-Admittedly, all tests were done by eye, following the console, as
-after reading through Douglas Crockford's book, then reading through
-the Vue.js documentation, then beginning with experimenting, there
-wasn't alot of time left to read over how the 'Jest' testing library
-works, to write unit tests. I also have not figured out how to split
-Javascript functions across files and still have them compatible with
-Vue.
+Due to the simplicity of the web app, there are only integration
+tests. Debuggin was done by eye, following the console, as after
+reading through Douglas Crockford's book, then reading through the
+Vue.js documentation, then beginning with experimenting, there wasn't
+alot of time left to read over how the 'Jest' testing library works,
+to write unit tests. I had not figured out how to split Javascript
+functions across files and still have them compatible with Vue. I
+subsequently abandoned Vue in favor of React, so I don't regret saving
+time here.
 
 
